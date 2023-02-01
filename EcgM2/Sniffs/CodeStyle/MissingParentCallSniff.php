@@ -121,7 +121,7 @@ class MissingParentCallSniff implements Sniff
             $endOfConstructorMethodIndex
         );
         $stringIndex = $curlyOpeningIndex + 1;
-        while ($stringIndex = $this->getNextTString($stringIndex, $endOfConstructorMethodIndex)) {
+        while ($stringIndex = $this->getNextTParent($stringIndex, $endOfConstructorMethodIndex)) {
             if ($this->tokens[$stringIndex]['content'] !== self::PARENT_KEYWORD) {
                 $stringIndex++;
                 continue;
@@ -143,5 +143,15 @@ class MissingParentCallSniff implements Sniff
     private function getNextTString($startIndex, int $endIndex)
     {
         return $this->file->findNext(T_STRING, $startIndex, $endIndex);
+    }
+
+    /**
+     * @param $startIndex
+     * @param int $endIndex
+     * @return bool|int
+     */
+    private function getNextTParent($startIndex, int $endIndex)
+    {
+        return $this->file->findNext(T_PARENT, $startIndex, $endIndex);
     }
 }
